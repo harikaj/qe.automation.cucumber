@@ -8,11 +8,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions
         (
                 features = ".//Features//",
-                glue = "stepDefinitions",
-                dryRun = false,
-                monochrome = true,
-                tags= {"@sanity"},
-                plugin = {"pretty","html:test-output"}
+                glue = {"unitTest.automation.stepDefinitions"}
+                //dryRun = true
+                //plugin = {"pretty","html:test-output"}
         )
 public class TestRun {
 }

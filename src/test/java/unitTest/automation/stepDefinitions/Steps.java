@@ -1,22 +1,28 @@
 package unitTest.automation.stepDefinitions;
 
-import cucumber.api.java.en.*;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import unitTest.automation.pageObjects.LoginPage;
+import unitTest.automation.pageObjects.FacebookMainPage;
 
+import java.util.concurrent.TimeUnit;
 
 public class Steps {
 
-    String driverPath=System.getProperty("user.dir") + "/Drivers/chromedriver.exe";
+    String driverPath=System.getProperty("user.dir")+"//Drivers//chromedriver.exe";
     public WebDriver driver;
-    public LoginPage loginPage;
+    public FacebookMainPage facebookMainPage;
+
     @Given("User Launch Chrome browser")
     public void user_Launch_Chrome_browser() {
-        System.setProperty("webdriver.chrome.driver",driverPath );
+        System.setProperty("webdriver.chrome.driver",driverPath);
         driver=new ChromeDriver();
-        loginPage=new LoginPage(driver);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        facebookMainPage= new FacebookMainPage(driver);
+
     }
 
     @When("User opens URL {string}")
@@ -24,23 +30,12 @@ public class Steps {
         driver.get(url);
     }
 
-    @When("User enters Email as {string} and Password as {string}")
-    public void user_enters_Email_as_and_Password_as(String email, String password) {
-        loginPage.setUsername(email);
-        loginPage.setPassword(password);
-    }
-
-    @When("Click on Login")
-    public void click_on_Login() {
-        loginPage.clickLoginButton();
-    }
-
     @Then("Page Title should be {string}")
     public void page_Title_should_be(String title) {
-        if(driver.getPageSource().contains("Login was unsuccessful"))
+        if(driver.getTitle().contains("Unable to launch"))
         {
             driver.close();
-            Assert.assertTrue(false);
+            Assert.fail();
         }
         else
         {
@@ -49,13 +44,17 @@ public class Steps {
 
     }
 
-    @When("User click on Log out link")
-    public void user_click_on_Log_out_link() {
-        loginPage.clickLogout();
+    @Then("User enters FirstName as {string} and LastName as {string}")
+    public void user_enters_FirstName_as_and_LastName_as(String firstName, String lastName) {
+        facebookMainPage.enterFirstName(firstName);
+        facebookMainPage.enterLastName(lastName);
+
     }
 
     @Then("close browser")
     public void close_browser() {
         driver.quit();
+
     }
+
 }
